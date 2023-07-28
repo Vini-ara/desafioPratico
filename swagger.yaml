@@ -8,6 +8,8 @@ externalDocs:
 tags:
   - name: Tarefa
     description: Tudo envolvendo tarefas
+  - name: Categoria
+    description: Tudo envolvendo categorias de tarefas
 paths:
   /tarefa:
     post:
@@ -128,6 +130,119 @@ paths:
                 $ref: '#/components/schemas/TarefaEntity'
         '404':
           description: Tarefa not found
+  /categoria:
+    post:
+      tags: 
+        - Categoria
+      summary: cria uma nova categoria
+      description: Cria uma nova categoria de tarefas
+      operationId: createCategoria
+      requestBody:
+        description: Campos necessários para se criar uma Categoria
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoriaDto'
+        required: true
+      responses:
+        '200':
+          description: Succesful operation
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaEntity'
+        '400':
+          description: Invalid input
+    get:
+      tags:
+        - Categoria
+      summary: Acha todas as categorias
+      description: Acha todas as categorias
+      operationId: findAllCategoria
+      responses:
+        '200':
+          description: Succesful operation
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaEntity'
+  /categoria/{categoriaId}:
+    get:
+      tags:
+        - Categoria
+      summary: Acha a categoria com o ID fornecido
+      description: Acha uma única categoria com o ID fornecido
+      operationId: findOneCategoria
+      parameters:
+        - name: categoriaId
+          in: path
+          description: ID da categoria a ser retornada
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Succesful operation
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaEntity'
+        '404':
+          description: Categoria not found
+    patch:
+      tags:
+        - Categoria
+      summary: Atualiza uma categoria
+      description: Atualiza os dados de uma categoria de tarefas
+      operationId: updateCategoria
+      parameters:
+        - name: categoriaId
+          in: path
+          description: ID da categoria a ser autalizada
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Dados necessários para se atualizar uma categoria
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoriaDto'
+        required: true
+      responses:
+        '200':
+          description: Succesful operation
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaEntity'
+        '400':
+          description: Invalid input
+    delete:
+      tags:
+        - Categoria
+      summary: Deleta uma categoria
+      description: Deleta a categoria com o ID informado
+      operationId: deleteCategoria
+      parameters:
+        - name: categoriaId
+          in: path
+          description: ID da categoria a ser deletada
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Succesful operation
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaEntity'
+        '404':
+          description: Categoria not found
 components:
   schemas:
     TarefaEntity:
@@ -143,6 +258,8 @@ components:
         isActive:
           type: boolean
           example: false
+        categoria:
+          $ref: "#/components/schemas/CategoriaEntity"
         createdAt:
           type: string
           format: date-time
@@ -155,6 +272,12 @@ components:
         nome:
           type: string
           example: "Fazer o projeto"
+        categoriaId:
+          type: integer
+          format: int64
+          example: 2
+      required:
+        - nome
     UpdateTarefaDto:
       type: object
       properties:
@@ -163,3 +286,28 @@ components:
           example: "Finalizar o projeto"
         isActive:
           type: boolean
+    CategoriaEntity:
+      type: object
+      properties:
+        id: 
+          type: integer
+          format: int64
+          example: 2
+        nome:
+          type: string
+          example: "urgentes"
+        createdAt:
+          type: string
+          format: date-time
+    CreateCategoriaDto:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: "urgente"
+    UpdateCategoriaDto:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: "Pode esperar"
